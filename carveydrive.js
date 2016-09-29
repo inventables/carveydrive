@@ -70,22 +70,40 @@ var startHeartbeat = function() {
 
 
 var simulateUpload = function() {
-  stopHeartbeat();
+  //stopHeartbeat();
 
   // This puts the machine into bootloader mode
   write('$K\n');
 
 
   // This takes the machine out of bootloader mode. Why?
-  port.close();
-  setTimeout(function() {
-    console.log("done");
-  }, 5000);
+  /*
+  port.close(function() {
+    console.log("port closed");
+  });
+   */
+
 };
 
 startHeartbeat();
 
+function countdown(seconds, callback) {
+  if (seconds > 0) {
+    console.log("..." + seconds);
+    setTimeout(function() {
+      countdown(seconds - 1, callback);
+    }, 1000);
+  } else {
+    callback();
+  }
+}
+
 setTimeout(function() {
   console.log("here we go...");
   simulateUpload();
+
+  console.log("Waiting to exit");
+  countdown(5, function() {
+    console.log("done");
+  });
 }, 5000);
